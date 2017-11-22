@@ -2,7 +2,7 @@ import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
 import Communications from 'react-native-communications';
-import { Card, CardSection, Button } from './common';
+import { Card, CardSection, Button, Confirm } from './common';
 import EmployeeForm from './EmployeeForm';
 import {
   employeeUpdate,
@@ -10,6 +10,8 @@ import {
 } from '../actions';
 
 class EmployeeEdit extends React.Component {
+
+  state = { showModal: false };
 
   componentWillMount() {
     _.each(this.props.employee, (value, prop) => {
@@ -28,6 +30,16 @@ class EmployeeEdit extends React.Component {
     Communications.text(phone, `Your upcoming shift is on ${shift}`);
   }
 
+  onAccept() {
+    const { uid } = this.props.employee;
+
+    this.props.employeeDelete({ uid });
+  }
+
+  onDecline() {
+    this.setState({ showModal: false });
+  }
+
   render() {
     return (
       <Card>
@@ -42,6 +54,20 @@ class EmployeeEdit extends React.Component {
                 Text schedule
             </Button>
         </CardSection>
+
+        <CardSection>
+            <Button onPress={this.setState({ showModal: true })}>
+                Fire
+            </Button>
+        </CardSection>
+
+        <Confirm 
+          visible={this.state.showModal}
+          onDecline={this.onDecline}
+          onAccept={this.onAccept}
+        >
+          are u sure?
+        </Confirm>
       </Card>
     );
   }

@@ -6,6 +6,7 @@ import { CardSection } from './common';
 class ListItem extends React.Component {
 
   onRowPress() {
+    console.log('teste');
     Actions.employeeEdit({ employee: this.props.employee });
   }
 
